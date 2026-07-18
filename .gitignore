@@ -1,0 +1,10 @@
+node_modules/
+dist/
+*.tgz
+coverage/
+.DS_Store
+*.log
+.baab/
+!templates/**/.baab/
+tmp/
+.vitest/

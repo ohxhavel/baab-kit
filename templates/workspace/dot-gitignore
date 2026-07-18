@@ -1,0 +1,9 @@
+# Derived state — rebuildable with `baab index`, never committed.
+.baab/
+
+# Secrets never belong in the tree; this is belt-and-suspenders.
+.env
+.env.*
+
+.DS_Store
+*.log

@@ -1,0 +1,42 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://raw.githubusercontent.com/ohxhavel/baab-kit/main/schema/baab.config.schema.json",
+  "title": "BaaB workspace manifest",
+  "type": "object",
+  "required": ["spec", "name", "slug", "folders", "frontmatter"],
+  "additionalProperties": true,
+  "properties": {
+    "$schema": { "type": "string" },
+    "spec": { "type": "integer", "minimum": 1 },
+    "name": { "type": "string" },
+    "slug": { "type": "string", "pattern": "^[a-z][a-z0-9]*(-[a-z0-9]+)*$" },
+    "createdWith": { "type": "string" },
+    "folders": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "required": ["kinds"],
+        "properties": {
+          "kinds": {
+            "type": "array",
+            "items": { "enum": ["entity", "project", "client", "app"] }
+          }
+        }
+      }
+    },
+    "frontmatter": {
+      "type": "object",
+      "required": ["types", "statuses"],
+      "properties": {
+        "types": { "type": "array", "items": { "type": "string" } },
+        "statuses": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "validate": {
+      "type": "object",
+      "properties": {
+        "ignore": { "type": "array", "items": { "type": "string" } }
+      }
+    }
+  }
+}

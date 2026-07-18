@@ -1,0 +1,75 @@
+{
+  "name": "baab",
+  "version": "0.1.0",
+  "description": "Business-as-a-Book — run your business as a governed, indexed, agent-ready markdown workspace. CLI + SDK.",
+  "type": "module",
+  "license": "MIT",
+  "author": "ohxhavel",
+  "homepage": "https://github.com/ohxhavel/baab-kit#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ohxhavel/baab-kit.git"
+  },
+  "bugs": {
+    "url": "https://github.com/ohxhavel/baab-kit/issues"
+  },
+  "keywords": [
+    "knowledge-base",
+    "markdown",
+    "cli",
+    "sdk",
+    "claude",
+    "obsidian",
+    "workspace",
+    "business-operations",
+    "frontmatter",
+    "sqlite",
+    "fts5"
+  ],
+  "bin": {
+    "baab": "dist/cli/main.js",
+    "baab-kit": "dist/cli/main.js"
+  },
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": ["dist", "templates", "schema", "README.md", "LICENSE"],
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "dev": "tsc -p tsconfig.json --watch",
+    "clean": "rm -rf dist",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "lint": "biome check .",
+    "format": "biome format --write .",
+    "check:boundaries": "node scripts/check-boundaries.mjs",
+    "check:privacy": "node scripts/check-privacy.mjs",
+    "test": "vitest run",
+    "test:unit": "vitest run tests/unit",
+    "test:e2e": "vitest run tests/e2e",
+    "prepublishOnly": "npm run clean && npm run build"
+  },
+  "dependencies": {
+    "commander": "^13.1.0",
+    "fast-glob": "^3.3.3",
+    "gray-matter": "^4.0.3",
+    "picocolors": "^1.1.1"
+  },
+  "optionalDependencies": {
+    "better-sqlite3": "^12.2.0"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "^1.9.4",
+    "@types/better-sqlite3": "^7.6.12",
+    "@types/node": "^22.10.0",
+    "typescript": "^5.7.2",
+    "vitest": "^2.1.8"
+  }
+}
