@@ -31,9 +31,13 @@ this tree. Read the kit for a folder before you act inside it.
 
 - Create things with the CLI: `baab new project <slug>`, `baab new client <slug>`,
   `baab new entity <slug>`, `baab new app <slug>`.
+- Grow the tree the governed way too: `baab folder add <name> [--kind <kind>]` — never
+  create a folder by hand.
 - After edits, run `baab index` to refresh search and regenerate the `_registry.md`
   rosters, then `baab doctor` to check the tree against the four laws.
 - `baab search "<query>"` searches everything. `baab status` shows the overview.
+- `baab serve` exposes this workspace over a local HTTP API (read-only unless
+  `--write`) — useful for driving it from an agent or another tool.
 - Secrets are never written as values. Reference them as `op://vault/item/field`.
 
 ## For Claude Code / Claude cloud

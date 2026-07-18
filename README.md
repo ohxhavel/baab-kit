@@ -9,9 +9,10 @@ canonical home per fact, every folder carrying its own instructions, everything
 full-text searchable and lintable — and prepared for Claude Code to develop further
 from day one.
 
-BaaB is a CLI and an SDK. It ships no server and needs no account: a workspace is
-plain markdown with YAML frontmatter (Obsidian- and git-friendly) plus a rebuildable
-SQLite index. Any business can adopt it for free.
+BaaB gives you three surfaces over one core — a **CLI**, an embeddable **SDK**, and a
+local **HTTP API** (`baab serve`). It needs no account: a workspace is plain markdown
+with YAML frontmatter (Obsidian- and git-friendly) plus a rebuildable SQLite index.
+Any business can adopt it for free.
 
 ```bash
 npx baab init "Acme Corp"
@@ -54,8 +55,12 @@ installed — either way, no setup.
 | `baab search <query>` | Full-text search (`--type`, `--tag`, `--status`, `--limit`). |
 | `baab doctor` | Check the workspace against the four laws. Exits non-zero on errors. |
 | `baab status` | Overview: counts, index freshness, validation summary. |
+| `baab folder add <name>` | Add a governed folder (with optional `--kind`) the templated way. |
+| `baab serve` | Run the local HTTP API over the workspace (`--write` to enable mutations). |
 
-Every command accepts `--json` for scripting and agents.
+Every command accepts `--json` for scripting and agents. `baab init` also takes
+`--devcontainer` (generate a Codespaces-ready `.devcontainer/`) and `--template <dir>`
+(use your own workspace template).
 
 ## The four laws
 
@@ -103,11 +108,13 @@ See [docs/sdk.md](docs/sdk.md) for the full surface.
 
 ## Docs
 
+Start at the [docs index](docs/_index.md). Highlights:
+
 - [Concepts](docs/concepts.md) — the model behind BaaB.
 - [Workspace spec](docs/workspace-spec.md) — the normative tree + frontmatter schema.
-- [CLI reference](docs/cli.md)
-- [SDK reference](docs/sdk.md)
+- [CLI reference](docs/cli.md) · [SDK reference](docs/sdk.md) · [API reference](docs/api.md)
 - [Claude integration](docs/claude-integration.md) — the `.claude/` layer and MCP.
+- [Troubleshooting](docs/troubleshooting.md) · [Roadmap](docs/roadmap.md)
 
 ## Contributing
 

@@ -57,20 +57,33 @@ function openNodeSqlite(path: string): BaabDb | null {
  * Open a SQLite database at `path`, preferring better-sqlite3 and falling back
  * to Node's built-in driver. Throws SqliteUnavailableError only when neither
  * backend is usable (Node < 22.5 whose better-sqlite3 build also failed).
+ *
+ * `BAAB_SQLITE_DRIVER=node|better` forces one backend — useful for testing the
+ * fallback, or for users who want to avoid the native dependency entirely.
  */
 export function openDb(path: string): BaabDb {
-  const db = openBetterSqlite(path) ?? openNodeSqlite(path);
+  const forced = process.env.BAAB_SQLITE_DRIVER;
+  let db: BaabDb | null;
+  if (forced === 'node') db = openNodeSqlite(path);
+  else if (forced === 'better') db = openBetterSqlite(path);
+  else db = openBetterSqlite(path) ?? openNodeSqlite(path);
   if (!db) throw new SqliteUnavailableError();
   return db;
 }
 
 /** Report which driver would be used without opening a file. */
 export function detectDriver(): SqliteDriver | null {
-  try {
-    require.resolve('better-sqlite3');
+  const forced = process.env.BAAB_SQLITE_DRIVER;
+  if (forced === 'node') return 'node:sqlite';
+  if (forced !== 'better') {
+    try {
+      require.resolve('better-sqlite3');
+      return 'better-sqlite3';
+    } catch {
+      // fall through
+    }
+  } else {
     return 'better-sqlite3';
-  } catch {
-    // fall through
   }
   try {
     require('node:sqlite');

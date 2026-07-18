@@ -1,4 +1,4 @@
-import { mkdir, writeFile } from 'node:fs/promises';
+import { mkdir, rm, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { createWorkspace } from '../../src/core/scaffold.js';
@@ -93,6 +93,31 @@ describe('doctor rules', () => {
     );
     const found = (await validate(ws)).filter((d) => d.rule === 'BAAB008');
     expect(found).toEqual([]);
+  });
+
+  it('BAAB007: flags a governed folder missing its kit', async () => {
+    await rm(path.join(ws.root, 'operations', 'CLAUDE.md'));
+    expect(await rules(ws)).toContain('BAAB007');
+  });
+
+  it('BAAB009: flags a deprecated note without superseded_by', async () => {
+    await write(
+      ws,
+      'operations/old.md',
+      '---\ntype: concept\nid: old\nstatus: deprecated\ncreated: 2026-01-01\nupdated: 2026-01-01\n---\n\nbody',
+    );
+    expect(await rules(ws)).toContain('BAAB009');
+  });
+
+  it('BAAB010: flags a spawned member missing from its registry', async () => {
+    // Write a project member's _index.md directly, without running `baab index`,
+    // so projects/_registry.md does not yet list it.
+    await write(
+      ws,
+      'projects/ghost/_index.md',
+      '---\ntype: project\nid: ghost\nstatus: planned\ncreated: 2026-01-01\nupdated: 2026-01-01\n---\n\n# Ghost',
+    );
+    expect(await rules(ws)).toContain('BAAB010');
   });
 
   it('a freshly created workspace has zero errors', async () => {

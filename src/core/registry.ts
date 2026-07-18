@@ -129,6 +129,10 @@ export async function updateRegistries(ws: Workspace, docs: ScannedDoc[]): Promi
     const members = membersFor(folder, docs);
     rows += members.length;
 
+    // The config may declare a governed folder the template never created
+    // (custom templates). Materialize it so its registry has somewhere to live.
+    await mkdir(path.join(ws.root, folder), { recursive: true });
+
     const regPath = path.join(ws.root, folder, '_registry.md');
     let existing: string;
     try {

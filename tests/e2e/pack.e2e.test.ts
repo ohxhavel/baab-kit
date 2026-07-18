@@ -107,20 +107,35 @@ describe('packed CLI end-to-end', () => {
     expect(out.errors).toBe(0);
   });
 
-  it('spawns project + client and stays doctor-clean', () => {
+  it('spawns all four kinds and stays doctor-clean', () => {
     baab(cliJs, wsDir, ['new', 'project', 'demo']);
     baab(cliJs, wsDir, ['new', 'client', 'acme']);
+    baab(cliJs, wsDir, ['new', 'app', 'vercel']);
+    baab(cliJs, wsDir, ['new', 'entity', 'holdco']);
     const out = JSON.parse(baab(cliJs, wsDir, ['doctor', '--json']));
     expect(out.errors).toBe(0);
     const reg = readFileSync(path.join(wsDir, 'projects/_registry.md'), 'utf8');
     expect(reg).toContain('demo');
   });
 
+  it('adds a governed folder and stays doctor-clean', () => {
+    const res = JSON.parse(
+      baab(cliJs, wsDir, ['folder', 'add', 'strategy', '--kind', 'project', '--json']),
+    );
+    expect(res.name).toBe('strategy');
+    expect(existsSync(path.join(wsDir, 'strategy/CLAUDE.md'))).toBe(true);
+    const cfg = JSON.parse(readFileSync(path.join(wsDir, 'baab.config.json'), 'utf8'));
+    expect(cfg.folders.strategy).toEqual({ kinds: ['project'] });
+    const out = JSON.parse(baab(cliJs, wsDir, ['doctor', '--json']));
+    expect(out.errors).toBe(0);
+  });
+
   it('searches and reports status', () => {
     const hits = JSON.parse(baab(cliJs, wsDir, ['search', 'registry', '--json']));
     expect(hits.length).toBeGreaterThan(0);
     const status = JSON.parse(baab(cliJs, wsDir, ['status', '--json']));
-    expect(status.counts.entities).toBe(1);
+    // 1 seeded + 1 spawned (holdco); project demo; client acme.
+    expect(status.counts.entities).toBe(2);
     expect(status.counts.projects).toBe(1);
     expect(status.counts.clients).toBe(1);
   });

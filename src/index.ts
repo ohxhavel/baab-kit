@@ -59,6 +59,7 @@ export {
   knownKinds,
   type SpawnOptions,
 } from './core/spawn.js';
+export { addFolder, type AddFolderOptions, type AddFolderResult } from './core/folder.js';
 export { buildIndex } from './core/indexer.js';
 export { updateRegistries } from './core/registry.js';
 export { search, toMatchExpr } from './core/search.js';
@@ -66,3 +67,4 @@ export { validate, type ValidateOptions } from './core/validate/index.js';
 export { getStatus } from './core/status.js';
 export { openDb, detectDriver } from './core/db.js';
 export { baabVersion } from './core/version.js';
+export { createServer, startServer, type ServeOptions } from './api/server.js';

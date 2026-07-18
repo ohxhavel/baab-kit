@@ -25,6 +25,17 @@ export function resolveKindTemplateDir(kind: string, override?: string): string 
   return path.join(packageRoot(), 'templates', 'kinds', kind);
 }
 
+/** Absolute path to the bundled devcontainer template dir. */
+export function resolveDevcontainerTemplateDir(): string {
+  return path.join(packageRoot(), 'templates', 'devcontainer');
+}
+
+/** Absolute path to the bundled governed-folder template dir. */
+export function resolveFolderTemplateDir(override?: string): string {
+  if (override) return path.resolve(override);
+  return path.join(packageRoot(), 'templates', 'folder');
+}
+
 const KNOWN_VARS = ['name', 'slug', 'id', 'date', 'year', 'kind'] as const;
 
 /**
@@ -85,8 +96,9 @@ async function walkFiles(dir: string, base = ''): Promise<string[]> {
 
 /**
  * Render every file under `srcDir` into `destDir`, interpolating variables in
- * both file contents and path segments. Refuses to overwrite existing files.
- * Returns the list of created destination paths (workspace-relative posix).
+ * both file contents and path segments. Scaffolding is additive: existing files
+ * are left untouched (skipped), never overwritten. Returns the list of files
+ * actually created (workspace-relative posix).
  */
 export async function renderTree(
   srcDir: string,

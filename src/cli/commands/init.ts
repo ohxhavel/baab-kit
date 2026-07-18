@@ -6,6 +6,8 @@ export interface InitFlags {
   dir?: string;
   git?: boolean;
   claude?: boolean;
+  devcontainer?: boolean;
+  template?: string;
   json?: boolean;
 }
 
@@ -16,6 +18,8 @@ export async function runInit(name: string, flags: InitFlags): Promise<number> {
     dir,
     git: flags.git,
     claude: flags.claude,
+    devcontainer: flags.devcontainer,
+    templateDir: flags.template,
   });
 
   if (flags.json) {

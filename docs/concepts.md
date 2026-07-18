@@ -34,6 +34,10 @@ The four kinds:
 - **client** — a customer account.
 - **app** — a managed tool or service the business runs on.
 
+The same discipline extends to the tree itself: when a business outgrows the default
+folders, you add a new governed folder with `baab folder add <name>` (not by hand),
+which scaffolds its kit and index and registers it in the manifest.
+
 ## One canonical home per fact
 
 Every fact lives in exactly one note. When another note needs it, it links — with a

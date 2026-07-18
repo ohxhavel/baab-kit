@@ -110,6 +110,14 @@ file). Those are documented per-template and validated only when present.
 ## Growth folders
 
 v1 keeps the tree lean. Businesses that outgrow it commonly add `brand/`,
-`automation/`, or `strategy/` folders — declare them in `folders` (with `kinds: []`
-for free-form areas) and give each a `CLAUDE.md` + `_index.md`. Future spec versions
-may standardize more of these.
+`automation/`, or `strategy/` folders. Add them the governed way — the same
+"never freehand" discipline that applies to members:
+
+```bash
+baab folder add strategy
+baab folder add campaigns --kind project
+```
+
+This renders the folder's `CLAUDE.md` + `_index.md` from a template and registers it in
+`baab.config.json` (with any `--kind`s it hosts). Future spec versions may standardize
+more of these as built-in presets.

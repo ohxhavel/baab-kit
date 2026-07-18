@@ -9,6 +9,7 @@ const ROOT = new URL('..', import.meta.url).pathname;
 const CORE_DIR = join(ROOT, 'src', 'core');
 const FORBIDDEN = [
   /from\s+['"]\.\.?\/.*cli/,
+  /from\s+['"]\.\.?\/.*api/,
   /from\s+['"]commander['"]/,
   /from\s+['"]picocolors['"]/,
 ];

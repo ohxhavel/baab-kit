@@ -70,6 +70,7 @@ values into `.mcp.json`. `baab doctor` scans the tree for committed secrets.
 
 The workspace is clean, governed infrastructure — a starting point. Add projects,
 wire up MCP servers, extend the frontmatter enums in `baab.config.json`, add growth
-folders (see the [workspace spec](workspace-spec.md)). Because the structure is
-uniform and every folder documents itself, an agent can keep building on it without
-re-learning the layout each time.
+folders with `baab folder add`, or run `baab serve` to expose the workspace to an agent
+over HTTP. Because the structure is uniform and every folder documents itself, an agent
+can keep building on it without re-learning the layout each time. Generating the
+workspace with `baab init --devcontainer` gives it a ready-to-code dev container too.

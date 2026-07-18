@@ -36,8 +36,8 @@ export interface BaabConfig {
   name: string;
   /** URL/path-safe slug. */
   slug: string;
-  /** The `baab` version that created the workspace. */
-  createdWith: string;
+  /** The `baab` version that created the workspace. Runtime defaults it if absent. */
+  createdWith?: string;
   /** Governed folders → which kinds spawn there. */
   folders: Record<string, FolderConfig>;
   /** Enum configuration (extensible). */
@@ -45,8 +45,8 @@ export interface BaabConfig {
     types: string[];
     statuses: string[];
   };
-  /** Validation configuration. */
-  validate: {
+  /** Validation configuration. Runtime defaults it if absent. */
+  validate?: {
     /** Glob patterns exempt from frontmatter/validation rules. */
     ignore: string[];
   };

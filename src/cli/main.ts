@@ -2,10 +2,12 @@
 import { Command } from 'commander';
 import { baabVersion } from '../core/version.js';
 import { runDoctor } from './commands/doctor.js';
+import { runFolderAdd } from './commands/folder.js';
 import { runIndex } from './commands/index-cmd.js';
 import { runInit } from './commands/init.js';
 import { runNew } from './commands/new.js';
 import { runSearch } from './commands/search.js';
+import { runServe } from './commands/serve.js';
 import { runStatus } from './commands/status.js';
 import { reportError } from './output.js';
 
@@ -18,6 +20,11 @@ function wrap(fn: () => Promise<number>): void {
     .catch((err) => {
       process.exitCode = reportError(err);
     });
+}
+
+/** Collect a repeatable option into an array. */
+function collect(value: string, previous: string[]): string[] {
+  return [...previous, value];
 }
 
 const program = new Command();
@@ -34,10 +41,19 @@ program
   .option('--dir <path>', 'target directory (default: ./<name>)')
   .option('--no-git', 'skip git initialization')
   .option('--no-claude', 'skip the .claude/ integration layer')
+  .option('--devcontainer', 'also generate a .devcontainer/ (Codespaces-ready)')
+  .option('--template <dir>', 'override the workspace template directory')
   .option('--json', 'output JSON')
   .action((name, opts) => {
     wrap(() =>
-      runInit(name, { dir: opts.dir, git: opts.git, claude: opts.claude, json: opts.json }),
+      runInit(name, {
+        dir: opts.dir,
+        git: opts.git,
+        claude: opts.claude,
+        devcontainer: opts.devcontainer,
+        template: opts.template,
+        json: opts.json,
+      }),
     );
   });
 
@@ -51,6 +67,17 @@ program
   .option('--json', 'output JSON')
   .action((kind, slug, opts) => {
     wrap(() => runNew(kind, slug, { name: opts.name, template: opts.template, json: opts.json }));
+  });
+
+const folder = program.command('folder').description('Manage governed folders');
+folder
+  .command('add')
+  .description('Add a governed folder (CLAUDE.md + _index.md + config registration)')
+  .argument('<name>', 'lowercase-hyphenated folder name')
+  .option('--kind <kind>', 'a kind this folder hosts (repeatable)', collect, [])
+  .option('--json', 'output JSON')
+  .action((name, opts) => {
+    wrap(() => runFolderAdd(name, { kind: opts.kind, json: opts.json }));
   });
 
 program
@@ -97,6 +124,17 @@ program
   .option('--json', 'output JSON')
   .action((opts) => {
     wrap(() => runStatus({ json: opts.json }));
+  });
+
+program
+  .command('serve')
+  .description('Run the local HTTP API over this workspace')
+  .option('--port <n>', 'port (default 4100)')
+  .option('--host <host>', 'host (default 127.0.0.1)')
+  .option('--write', 'enable mutating POST endpoints (default read-only)')
+  .option('--json', 'print the server URL as JSON')
+  .action((opts) => {
+    wrap(() => runServe({ port: opts.port, host: opts.host, write: opts.write, json: opts.json }));
   });
 
 program.parseAsync(process.argv).catch((err) => {

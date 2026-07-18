@@ -51,6 +51,26 @@ Validates the slug and id uniqueness (`InvalidSlugError`, `DuplicateIdError`,
 `UnknownKindError`), copies the kind template, and rebuilds the index. Pass
 `skipIndex: true` to defer the rebuild.
 
+### `addFolder(ws, opts): Promise<AddFolderResult>`
+
+```ts
+await addFolder(ws, { name: 'strategy', kinds: ['project'] });
+```
+
+Adds a governed folder (kit + index) and registers it in `baab.config.json`. Refuses a
+name that already exists.
+
+## HTTP API
+
+### `startServer(ws, opts?): Promise<{ server, url, host, port }>`
+
+Starts the local API (read-only unless `opts.write`). `createServer(ws, opts?)` returns
+an unstarted `http.Server`. See the [API reference](api.md).
+
+```ts
+const { url } = await startServer(ws, { port: 4100 });
+```
+
 ## Index, search, registries
 
 ### `buildIndex(ws): Promise<IndexStats>`

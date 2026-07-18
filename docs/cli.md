@@ -18,6 +18,8 @@ baab init Acme --dir ./workspaces/acme --no-git
 | `--dir <path>` | Target directory (default `./<name>`). Must be empty. |
 | `--no-git` | Skip git initialization. |
 | `--no-claude` | Omit the `.claude/` integration layer. |
+| `--devcontainer` | Also generate a `.devcontainer/` so the workspace is Codespaces-ready. |
+| `--template <dir>` | Use a custom workspace template tree instead of the built-in one. |
 | `--json` | Print the `InitResult` as JSON. |
 
 Creates the tree, writes the manifest, seeds the business as a registry entity, builds
@@ -41,6 +43,22 @@ baab new app vercel
 
 The slug must be lowercase-hyphenated and unique in the workspace. Spawning refreshes
 the index and registries automatically.
+
+## `baab folder add <name>`
+
+Add a governed folder the templated way — the same "never freehand" discipline that
+`baab new` applies to members. Renders a `CLAUDE.md` + `_index.md` into the folder and
+registers it in `baab.config.json`.
+
+```bash
+baab folder add strategy
+baab folder add campaigns --kind project --kind client
+```
+
+| Flag | Effect |
+| --- | --- |
+| `--kind <kind>` | A kind this folder hosts (repeatable). A folder with kinds gets a generated `_registry.md`. |
+| `--json` | Print the `AddFolderResult` as JSON. |
 
 ## `baab index`
 
@@ -92,3 +110,20 @@ validation summary.
 baab status
 baab status --json
 ```
+
+## `baab serve`
+
+Run the local HTTP API over the workspace. Read-only unless `--write`. See the full
+[API reference](api.md).
+
+```bash
+baab serve                       # http://127.0.0.1:4100, read-only
+baab serve --port 8080 --write   # enable POST endpoints
+```
+
+| Flag | Effect |
+| --- | --- |
+| `--port <n>` | Listen port (default 4100). |
+| `--host <host>` | Bind address (default 127.0.0.1). |
+| `--write` | Enable mutating `POST` endpoints. |
+| `--json` | Print the server URL as JSON on startup. |

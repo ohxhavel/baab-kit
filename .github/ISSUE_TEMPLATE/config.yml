@@ -1,0 +1,8 @@
+blank_issues_enabled: true
+contact_links:
+  - name: Security vulnerability
+    url: https://github.com/ohxhavel/baab-kit/security/advisories/new
+    about: Please report security issues privately, not as a public issue.
+  - name: Documentation
+    url: https://github.com/ohxhavel/baab-kit/tree/main/docs
+    about: Check the docs before filing — many questions are answered there.

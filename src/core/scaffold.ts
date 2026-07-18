@@ -8,7 +8,11 @@ import { gitAvailable, initRepo } from './git.js';
 import { buildIndex } from './indexer.js';
 import { slugify } from './naming.js';
 import { spawnFromTemplate } from './spawn.js';
-import { renderTree, resolveWorkspaceTemplateDir } from './templates.js';
+import {
+  renderTree,
+  resolveDevcontainerTemplateDir,
+  resolveWorkspaceTemplateDir,
+} from './templates.js';
 import type { InitResult, TemplateVars, Workspace } from './types.js';
 import { baabVersion } from './version.js';
 import { loadWorkspace } from './workspace.js';
@@ -22,6 +26,8 @@ export interface InitOptions {
   git?: boolean;
   /** Include the .claude/ integration layer (default: true). */
   claude?: boolean;
+  /** Also generate a .devcontainer/ so the workspace is Codespaces-ready (default: false). */
+  devcontainer?: boolean;
   /** Override the workspace template dir. */
   templateDir?: string;
 }
@@ -64,12 +70,18 @@ export async function createWorkspace(opts: InitOptions): Promise<InitResult> {
     files = created.filter((f) => !f.startsWith('.claude/'));
   }
 
-  // 3. Write the manifest.
+  // 3. Optionally add a .devcontainer/ so the workspace opens ready-to-code.
+  if (opts.devcontainer) {
+    const dc = await renderTree(resolveDevcontainerTemplateDir(), dir, vars);
+    files.push(...dc);
+  }
+
+  // 4. Write the manifest.
   const config = defaultConfig(name, slug, `baab@${baabVersion()}`);
   await writeFile(path.join(dir, CONFIG_FILENAME), serializeConfig(config), 'utf8');
   files.push(CONFIG_FILENAME);
 
-  // 4. Load the workspace and seed its own business entity into registry/.
+  // 5. Load the workspace and seed its own business entity into registry/.
   const ws: Workspace = await loadWorkspace(dir);
   const seed = await spawnFromTemplate(ws, {
     kind: 'entity',
@@ -79,10 +91,10 @@ export async function createWorkspace(opts: InitOptions): Promise<InitResult> {
   });
   files.push(...seed.filesCreated);
 
-  // 5. Build the index + registries.
+  // 6. Build the index + registries.
   const indexStats = await buildIndex(ws);
 
-  // 6. Optionally initialize git (after index so .baab is gitignored out).
+  // 7. Optionally initialize git (after index so .baab is gitignored out).
   let gitInitialized = false;
   if (opts.git !== false && (await gitAvailable())) {
     await initRepo(dir);
