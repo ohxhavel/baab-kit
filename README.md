@@ -1,5 +1,9 @@
 # BaaB — Business-as-a-Book
 
+[![CI](https://github.com/ohxhavel/baab-kit/actions/workflows/ci.yml/badge.svg)](https://github.com/ohxhavel/baab-kit/actions/workflows/ci.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+[![Node](https://img.shields.io/badge/node-%3E%3D22-brightgreen.svg)](https://nodejs.org)
+
 Run your business as a governed, indexed, agent-ready markdown workspace. One
 canonical home per fact, every folder carrying its own instructions, everything
 full-text searchable and lintable — and prepared for Claude Code to develop further
