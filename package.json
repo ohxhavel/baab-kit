@@ -40,7 +40,7 @@
   "types": "./dist/index.d.ts",
   "files": ["dist", "templates", "schema", "README.md", "LICENSE"],
   "engines": {
-    "node": ">=20.0.0"
+    "node": ">=22.0.0"
   },
   "scripts": {
     "build": "tsc -p tsconfig.json",

@@ -5,7 +5,8 @@ All notable changes to this project are documented here. This project follows
 
 ## [0.1.0] — unreleased
 
-First public release.
+First public release. Requires Node 22+ (ships `node:sqlite`, so search works with no
+native build; `better-sqlite3` is used as a faster optional backend when present).
 
 ### Added
 

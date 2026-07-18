@@ -36,8 +36,9 @@ npm install baab
 npx baab <command>
 ```
 
-Requires Node 20+. Search uses `better-sqlite3` when available and falls back to
-Node's built-in `node:sqlite` (Node 22.5+) — either way, no setup.
+Requires Node 22+. Search uses Node's built-in `node:sqlite` out of the box (no
+native build), and transparently uses `better-sqlite3` as a faster backend when it's
+installed — either way, no setup.
 
 ## Commands
 

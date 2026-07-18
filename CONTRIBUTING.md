@@ -11,7 +11,7 @@ npm run build
 npm test
 ```
 
-Requires Node 20+ (development uses Node 22).
+Requires Node 22+ (which ships `node:sqlite`, so no native build is needed).
 
 ## The commands you'll run
 
