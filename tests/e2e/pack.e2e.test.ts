@@ -1,5 +1,5 @@
 import { execFileSync } from 'node:child_process';
-import { existsSync, readFileSync } from 'node:fs';
+import { existsSync, mkdirSync, readFileSync } from 'node:fs';
 import { mkdtemp, readFile, readdir, rm } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
@@ -10,6 +10,10 @@ const REPO = path.resolve(fileURLToPath(import.meta.url), '../../..');
 const EXPECTED: string[] = JSON.parse(
   readFileSync(path.join(REPO, 'tests/e2e/expected-tree.json'), 'utf8'),
 );
+
+// On Windows the npm executable is `npm.cmd`; execFileSync won't resolve a bare
+// `npm` there.
+const NPM = process.platform === 'win32' ? 'npm.cmd' : 'npm';
 
 // Strings that would indicate the source vault leaked into the public product.
 // `op://` (the sanctioned reference form) and the public repo URL are allowed.
@@ -41,19 +45,23 @@ describe('packed CLI end-to-end', () => {
   beforeAll(async () => {
     work = await mkdtemp(path.join(tmpdir(), 'baab-e2e-'));
     // Build + pack the real tarball.
-    execFileSync('npm', ['run', 'build'], { cwd: REPO, stdio: 'ignore' });
-    const packOut = execFileSync('npm', ['pack', '--pack-destination', work], {
+    execFileSync(NPM, ['run', 'build'], { cwd: REPO, stdio: 'ignore', shell: true });
+    const packOut = execFileSync(NPM, ['pack', '--pack-destination', work], {
       cwd: REPO,
       encoding: 'utf8',
+      shell: true,
     });
     const tgz = packOut.trim().split('\n').pop() as string;
 
     // Install into a fresh project.
     const proj = path.join(work, 'proj');
-    execFileSync('npm', ['init', '-y'], { cwd: work, stdio: 'ignore' });
-    execFileSync('mkdir', ['-p', proj]);
-    execFileSync('npm', ['init', '-y'], { cwd: proj, stdio: 'ignore' });
-    execFileSync('npm', ['install', path.join(work, tgz)], { cwd: proj, stdio: 'ignore' });
+    mkdirSync(proj, { recursive: true });
+    execFileSync(NPM, ['init', '-y'], { cwd: proj, stdio: 'ignore', shell: true });
+    execFileSync(NPM, ['install', path.join(work, tgz)], {
+      cwd: proj,
+      stdio: 'ignore',
+      shell: true,
+    });
     cliJs = path.join(proj, 'node_modules', 'baab', 'dist', 'cli', 'main.js');
     expect(existsSync(cliJs)).toBe(true);
 
